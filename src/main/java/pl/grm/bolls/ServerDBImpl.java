@@ -10,6 +10,10 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import pl.grm.boll.lib.LauncherDB;
+import pl.grm.boll.lib.Player;
+import pl.grm.boll.lib.Result;
+
 public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	private static final String	PORT		= "3306";
 	private static final String	IP			= "91.230.204.135";
@@ -39,11 +43,15 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 		Result result = null;
 		try {
 			rs = executeQuery("SELECT login from Users WHERE login='" + str + "';");
-			while (rs.next()) {
+			if (!rs.next()) {
 				result = new Result(1);
-				String tempS = rs.getString("login");
-				result.setResultString(tempS);
-				logger.info("Result gathered: String: " + tempS);
+				result.setE(new Exception());
+			} else {
+				while (rs.next()) {
+					String tempS = rs.getString("login");
+					result.setResultString(tempS);
+					logger.info("Result gathered: String: " + tempS);
+				}
 			}
 		}
 		catch (SQLException e) {

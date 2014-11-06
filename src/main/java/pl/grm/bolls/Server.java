@@ -18,7 +18,7 @@ public class Server {
 	private static Registry		registry;
 	private static InetAddress	myHost	= null;
 	private static String		myIP, login, pass;
-	private static int			port	= 1234;
+	private static int			PORT	= 1234;
 	private static ServerDBImpl	dbHandler;
 	
 	public static void main(String[] args) {
@@ -26,7 +26,7 @@ public class Server {
 			setupLogger();
 			checkArgs(args);
 			logger.info("Starting Server");
-			registry = LocateRegistry.createRegistry(port);
+			registry = LocateRegistry.createRegistry(PORT);
 			myHost = InetAddress.getLocalHost();
 			myIP = myHost.getHostAddress();
 			dbHandler = new ServerDBImpl(logger);
@@ -52,7 +52,7 @@ public class Server {
 			if (registry != null && myHost != null && dbHandler != null) {
 				logger.info("Server should be running");
 				logger.info("My Host/IP: " + myHost);
-				logger.info("Running on port: " + port);
+				logger.info("Running on port: " + PORT);
 			} else {
 				logger.log(Level.SEVERE, "Server not started. Smth went wrong.");
 			}

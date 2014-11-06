@@ -6,6 +6,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import pl.grm.boll.lib.LauncherDB;
+import pl.grm.boll.lib.Result;
+
 public class ClientTest {
 	public static void main(String[] args) {
 		try {
@@ -30,9 +33,9 @@ public class ClientTest {
 		LauncherDB dbHandler = (LauncherDB) registry.lookup("dBConfBindHandler");
 		return dbHandler;
 	}
-
+	
 	private static void checkIfExists(LauncherDB dbHandler) throws RemoteException {
-		Result result = dbHandler.checkIfExists("ann");
+		Result result = dbHandler.checkIfExists("bann");
 		String str = result.getResultString();
 		System.out.println(str);
 	}
@@ -41,7 +44,7 @@ public class ClientTest {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 	private static void checkIfActivated(LauncherDB dbHandler) {
 		// TODO Auto-generated method stub
 		
