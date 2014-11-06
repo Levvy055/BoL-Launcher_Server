@@ -40,11 +40,10 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	public Result checkIfExists(String str) {
 		logger.info("Client connected");
 		ResultSet rs = null;
-		Result result = null;
+		Result result = new Result(1);
 		try {
 			rs = executeQuery("SELECT login from Users WHERE login='" + str + "';");
 			if (!rs.next()) {
-				result = new Result(1);
 				result.setE(new Exception());
 			} else {
 				while (rs.next()) {
@@ -65,9 +64,23 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	}
 	
 	@Override
-	public Result checkPasswd(String str) {
-		// TODO Auto-generated method stub
-		return null;
+	public Result checkPasswd(String str, String str2) {
+		logger.info("Client connected. checkPasswd");
+		ResultSet rs = null;
+		Result result = new Result(2);
+		try {
+			rs = executeQuery("SELECT password FROM Users WHERE login='" + str + "',password='"
+					+ str2 + "';");
+			if (!rs.next()) {
+				result.setTruefalse(true);
+			}
+		}
+		catch (SQLException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 	
 	@Override
