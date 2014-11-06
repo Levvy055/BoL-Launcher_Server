@@ -10,8 +10,8 @@ public class Result implements Serializable {
 	private int			resultInt			= 0;
 	private Exception	e;
 	
-	public Result(byte type) {
-		this.RESULT_TYPE = type;
+	public Result(int i) {
+		this.RESULT_TYPE = Byte.parseByte(Integer.toString(i));
 	}
 	
 	public boolean isConn_established() {

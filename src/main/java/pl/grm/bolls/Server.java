@@ -7,7 +7,6 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Scanner;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +29,7 @@ public class Server {
 			registry = LocateRegistry.createRegistry(port);
 			myHost = InetAddress.getLocalHost();
 			myIP = myHost.getHostAddress();
-			dbHandler = new ServerDBImpl();
+			dbHandler = new ServerDBImpl(logger);
 			dbHandler.prepareConnection(login, pass);
 			registry.bind("dBConfBindHandler", dbHandler);
 		}
@@ -82,24 +81,5 @@ public class Server {
 			throw new NullPointerException("Bad arguments amount. \n Should be: login pass");
 		}
 		
-	}
-	
-	private void stopSRMI() {
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				int inputInt = 0;
-				Scanner input = new Scanner(System.in);
-				while (true) {
-					if (input.hasNextInt()) {
-						inputInt = input.nextInt();
-					} else {
-						System.out.println("Wprowadz¸ liczbe!!!");
-						input.next();
-					}
-					if (inputInt == 666) { return; }
-				}
-			}
-		});
 	}
 }

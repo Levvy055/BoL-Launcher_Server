@@ -7,19 +7,22 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	private static final String	PORT		= "3306";
 	private static final String	IP			= "91.230.204.135";
 	private String				dbLogin;
 	private String				dbPasswd;
-	ResultSet					rs			= null;
-	Statement					statement	= null;
+	private Statement			statement	= null;
 	private String				URL;
 	private Connection			connection;
+	private Logger				logger;
 	
-	public ServerDBImpl() throws RemoteException {
+	public ServerDBImpl(Logger logger) throws RemoteException {
 		super();
+		this.logger = logger;
 	}
 	
 	public void prepareConnection(String login, String pass) {
@@ -31,8 +34,26 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	
 	@Override
 	public Result checkIfExists(String str) {
-		// TODO Auto-generated method stub
-		return null;
+		logger.info("Client connected");
+		ResultSet rs = null;
+		Result result = null;
+		try {
+			rs = executeQuery("SELECT login from Users WHERE login='" + str + "';");
+			while (rs.next()) {
+				result = new Result(1);
+				String tempS = rs.getString("login");
+				result.setResultString(tempS);
+				logger.info("Result gathered: String: " + tempS);
+			}
+		}
+		catch (SQLException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			e.printStackTrace();
+		}
+		finally {
+			closeConn(rs);
+		}
+		return result;
 	}
 	
 	@Override
@@ -56,7 +77,25 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	private ResultSet executeQuery(String query) throws SQLException {
 		connection = DriverManager.getConnection(URL);
 		statement = connection.createStatement();
-		rs = statement.executeQuery(query);
+		ResultSet rs = statement.executeQuery(query);
 		return rs;
+	}
+	
+	private void closeConn(ResultSet rs) {
+		try {
+			if (rs != null) {
+				rs.close();
+			}
+			if (statement != null) {
+				statement.close();
+			}
+			if (connection != null) {
+				connection.close();
+			}
+		}
+		catch (SQLException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			e.printStackTrace();
+		}
 	}
 }
