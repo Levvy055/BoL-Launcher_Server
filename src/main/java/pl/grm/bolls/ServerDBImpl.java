@@ -32,8 +32,8 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	public void prepareConnection(String login, String pass) {
 		this.dbLogin = login;
 		this.dbPasswd = pass;
-		URL = "jdbc:mysql://" + IP + ":" + PORT + "/BattleOfLegends?user=" + dbLogin + "&password="
-				+ dbPasswd;
+		URL = "jdbc:mysql://" + IP + ":" + PORT + "/BattleOfLegends?user=" + dbLogin
+				+ "&password=" + dbPasswd;
 	}
 	
 	@Override
@@ -44,7 +44,7 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 		try {
 			rs = executeQuery("SELECT login from Users WHERE login='" + str + "';");
 			if (!rs.next()) {
-				result.setE(new Exception());
+				result.setException(new Exception());
 			} else {
 				while (rs.next()) {
 					String tempS = rs.getString("login");
@@ -69,10 +69,10 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 		ResultSet rs = null;
 		Result result = new Result(2);
 		try {
-			rs = executeQuery("SELECT password FROM Users WHERE login='" + str + "',password='"
-					+ str2 + "';");
+			rs = executeQuery("SELECT password FROM Users WHERE login='" + str
+					+ "',password='" + str2 + "';");
 			if (!rs.next()) {
-				result.setTruefalse(true);
+				result.setResultBoolean(true);
 			}
 		}
 		catch (SQLException e) {
