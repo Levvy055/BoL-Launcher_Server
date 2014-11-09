@@ -42,11 +42,11 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 		ResultSet rs = null;
 		Result result = new Result(1);
 		try {
-			rs = executeQuery("SELECT login from Users WHERE login='" + str + "';");
+			rs = executeQuery("SELECT login from bol_users WHERE login='" + str + "';");
 			if (!rs.next()) {
 				result.setException(new Exception());
 			} else {
-				while (rs.next()) {
+				if (rs.next()) {
 					String tempS = rs.getString("login");
 					result.setResultString(tempS);
 					logger.info("Result gathered: String: " + tempS);
@@ -69,9 +69,9 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 		ResultSet rs = null;
 		Result result = new Result(2);
 		try {
-			rs = executeQuery("SELECT password FROM Users WHERE login='" + str
+			rs = executeQuery("SELECT password FROM bol_users WHERE login='" + str
 					+ "',password='" + str2 + "';");
-			if (!rs.next()) {
+			if (rs.next()) {
 				result.setResultBoolean(true);
 			}
 		}
@@ -79,7 +79,9 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 			logger.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
-		
+		finally {
+			closeConn(rs);
+		}
 		return result;
 	}
 	
@@ -87,6 +89,27 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	public Result checkIfActivated(String str) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public Result checkSalt(String login) throws RemoteException {
+		logger.info("Client connected. checkSalt");
+		ResultSet rs = null;
+		Result result = new Result(4);
+		try {
+			rs = executeQuery("SELECT salt FROM bol_users WHERE login='" + login + "';");
+			if (rs.next()) {
+				result.setResultString(rs.getString("salt"));
+			}
+		}
+		catch (SQLException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			e.printStackTrace();
+		}
+		finally {
+			closeConn(rs);
+		}
+		return result;
 	}
 	
 	@Override
