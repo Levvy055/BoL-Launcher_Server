@@ -1,31 +1,45 @@
-<!DOCTYPE HTML>
+<?php 
+include("config.php");
+include("hashphp.php");
 
-<html lang="pl">
-    <head>
-        <meta charset="utf-8"/>
-    </head>
-    <body>
-        <?php
-			$login = $_POST['login'];
-			$pass = $_POST['pass'];
-            
-			if($login == "a" && $pass == "a") {
-echo<<<END
+$login = $_POST['login'];
+$haslo = $_POST['haslo'];
+$haslo = addslashes($haslo);
+$login = addslashes($login);
+$login = htmlspecialchars($login);
 
-	<title>BoL $login</title>
-	
-	Zalogowano!!
-	<br>
-	<br>
-	<form action="index.php">
-		<input type="submit" value="Wyloguj" />
-	</form>
+if(isset($_GET["login"])) {
+	if ($_GET["login"] != "") { //jezeli ktos przez adres probuje kombinowac
+	exit;
+	}
+}
+if(isset($_GET["haslo"])) {
+	if ($_GET["haslo"] != "") { //jezeli ktos przez adres probuje kombinowac
+	exit;
+	}
+}
 
-END;
-			} else {
-				echo "Zly login lub haslo!!";
-			}
-        ?>
-        <br /><br />
-    </body>
-</html>
+$haslo = create_hash($haslo); //szyfrowanie hasla
+    if (!$login OR empty($login)) {
+include("head2.php");
+echo '<p class="alert">Wype³nij pole z loginem!</p>';
+include("foot.php");
+exit;
+}
+    if (!$haslo OR empty($haslo)) {
+include("head2.php");
+echo '<p class="alert">Wype³nij pole z has³em!</p>';
+include("foot.php");
+exit;
+}
+$istlogin = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM `bol_users` WHERE `login` = '$login' AND `password` = '$haslo'")); // sprawdzenie czy istnieje uzytkownik o takim loginu i hasle
+    if ($istlogin[0] == 0) {
+echo 'Logowanie nieudane. SprawdŸ pisowniê loginu oraz has³a.';
+    } else {
+
+$_SESSION['login'] = $login;
+$_SESSION['haslo'] = $haslo;
+
+header("Location: zalogowani.php");
+}
+?>
