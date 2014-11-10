@@ -15,11 +15,12 @@ import pl.grm.boll.lib.Player;
 import pl.grm.boll.lib.Result;
 
 public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
-	private static final String	PORT		= "3306";
-	private static final String	IP			= "91.230.204.135";
+	private static final long	serialVersionUID	= 1L;
+	private static final String	PORT				= "3306";
+	private static final String	IP					= "91.230.204.135";
 	private String				dbLogin;
 	private String				dbPasswd;
-	private Statement			statement	= null;
+	private Statement			statement			= null;
 	private String				URL;
 	private Connection			connection;
 	private Logger				logger;
@@ -32,30 +33,31 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	public void prepareConnection(String login, String pass) {
 		this.dbLogin = login;
 		this.dbPasswd = pass;
-		URL = "jdbc:mysql://" + IP + ":" + PORT + "/BattleOfLegends?user=" + dbLogin
-				+ "&password=" + dbPasswd;
+		URL = "jdbc:mysql://" + IP + ":" + PORT + "/BattleOfLegends?user=" + dbLogin + "&password="
+				+ dbPasswd;
 	}
 	
 	@Override
 	public Result checkIfExists(String str) {
-		logger.info("Client connected");
+		logger.info("Client connected /n checkIfExists");
 		ResultSet rs = null;
 		Result result = new Result(1);
 		try {
-			rs = executeQuery("SELECT login from bol_users WHERE login='" + str + "';");
-			if (!rs.next()) {
-				result.setException(new Exception());
+			String query = "SELECT login from bol_users WHERE login='" + str + "';";
+			logger.info("Query execute: " + query);
+			rs = executeQuery(query);
+			if (rs.next()) {
+				String tempS = rs.getString("login");
+				result.setResultBoolean(true);
+				result.setResultString(tempS);
+				logger.info("Result gathered: String: " + tempS);
 			} else {
-				if (rs.next()) {
-					String tempS = rs.getString("login");
-					result.setResultString(tempS);
-					logger.info("Result gathered: String: " + tempS);
-				}
+				result.setResultBoolean(false);
 			}
 		}
 		catch (SQLException e) {
 			logger.log(Level.SEVERE, e.toString(), e);
-			e.printStackTrace();
+			result.setException(e);
 		}
 		finally {
 			closeConn(rs);
@@ -65,19 +67,22 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	
 	@Override
 	public Result checkPasswd(String login, String hPasswd) {
-		logger.info("Client connected. checkPasswd");
+		logger.info("Client connected /n checkPasswd on " + login);
 		ResultSet rs = null;
 		Result result = new Result(2);
 		try {
-			rs = executeQuery("SELECT password FROM bol_users WHERE login='" + login
-					+ "' AND password='" + hPasswd + "';");
+			String query = "SELECT password FROM bol_users WHERE login='" + login
+					+ "' AND password='" + hPasswd + "';";
+			logger.info("Query execute: " + query);
+			rs = executeQuery(query);
 			if (rs.next()) {
 				result.setResultBoolean(true);
+			} else {
+				result.setResultBoolean(false);
 			}
 		}
 		catch (SQLException e) {
 			logger.log(Level.SEVERE, e.toString(), e);
-			e.printStackTrace();
 		}
 		finally {
 			closeConn(rs);
@@ -93,7 +98,7 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	
 	@Override
 	public Result checkSalt(String login) throws RemoteException {
-		logger.info("Client connected. checkSalt");
+		logger.info("Client connected /n checkSalt");
 		ResultSet rs = null;
 		Result result = new Result(4);
 		try {
@@ -155,5 +160,17 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public String getHostIP() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public String getClientIP() throws RemoteException {
+		return null;
+		// TODO Auto-generated method stub
 	}
 }
