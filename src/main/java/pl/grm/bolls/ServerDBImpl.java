@@ -64,13 +64,13 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	}
 	
 	@Override
-	public Result checkPasswd(String str, String str2) {
+	public Result checkPasswd(String login, String hPasswd) {
 		logger.info("Client connected. checkPasswd");
 		ResultSet rs = null;
 		Result result = new Result(2);
 		try {
-			rs = executeQuery("SELECT password FROM bol_users WHERE login='" + str
-					+ "',password='" + str2 + "';");
+			rs = executeQuery("SELECT password FROM bol_users WHERE login='" + login
+					+ "' AND password='" + hPasswd + "';");
 			if (rs.next()) {
 				result.setResultBoolean(true);
 			}
@@ -141,5 +141,19 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 			logger.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
+	}
+	
+	public boolean isConnectionCorrect() {
+		try {
+			connection = DriverManager.getConnection(URL);
+			statement = connection.createStatement();
+			closeConn(null);
+		}
+		catch (SQLException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

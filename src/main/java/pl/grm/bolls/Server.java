@@ -57,6 +57,13 @@ public class Server {
 				logger.log(Level.SEVERE, "Server not started. Smth went wrong.");
 			}
 		}
+		logger.info("Testing database connection ... ");
+		if (dbHandler.isConnectionCorrect()) {
+			logger.info("Connected succesfully.");
+		} else {
+			logger.info("Connection error. Exiting ...");
+			System.exit(0);
+		}
 	}
 	
 	private static void setupLogger() {
@@ -78,7 +85,7 @@ public class Server {
 			login = args[0];
 			pass = args[1];
 		} else {
-			throw new NullPointerException("Bad arguments amount. \n Should be: login pass");
+			throw new NullPointerException("Bad arguments! \n Should be: login pass");
 		}
 		
 	}
