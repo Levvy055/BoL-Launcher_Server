@@ -11,8 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import pl.grm.boll.lib.LauncherDB;
-import pl.grm.boll.lib.Player;
 import pl.grm.boll.lib.Result;
+import pl.grm.boll.lib.game.Player;
 
 public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	private static final long	serialVersionUID	= 1L;
