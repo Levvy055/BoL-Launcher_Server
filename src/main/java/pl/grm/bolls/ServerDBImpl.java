@@ -161,16 +161,4 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 		}
 		return true;
 	}
-	
-	@Override
-	public String getHostIP() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	public String getClientIP() throws RemoteException {
-		return null;
-		// TODO Auto-generated method stub
-	}
 }

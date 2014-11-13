@@ -14,7 +14,7 @@ public class Server {
 	private static Registry		registry;
 	private static InetAddress	myHost	= null;
 	private static String		myIP, login, pass;
-	private static int			PORT	= 1234;
+	private static int			PORT	= 2234;
 	private static ServerDBImpl	dbHandler;
 	
 	public static void main(String[] args) {
