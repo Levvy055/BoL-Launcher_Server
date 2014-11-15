@@ -6,8 +6,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import pl.grm.boll.lib.LauncherDB;
-import pl.grm.boll.lib.Result;
+import pl.grm.bol.lib.LauncherDB;
+import pl.grm.bol.lib.Result;
 
 public class ClientTest {
 	public static void main(String[] args) {
