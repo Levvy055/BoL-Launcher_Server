@@ -7,10 +7,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import pl.grm.bol.lib.Config;
+
 public class ServerLogger {
-	public static final String	APP_DATA		= System.getenv("APPDATA");
-	public static final String	BOL_CONF_PATH	= APP_DATA + "\\BoL-Server\\";
-	public static final String	logFileName		= "server.log";
+	public static final String	logFileName	= "server.log";
 	private Logger				logger;
 	private FileHandler			fHandler;
 	
@@ -19,13 +19,13 @@ public class ServerLogger {
 	}
 	
 	private void setupLogger() {
-		File dir = new File(BOL_CONF_PATH);
+		File dir = new File(Config.BOL_CONF_PATH);
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
 		logger = Logger.getLogger(ServerLogger.class.getName());
 		try {
-			fHandler = new FileHandler(BOL_CONF_PATH + logFileName, 1048476, 1, true);
+			fHandler = new FileHandler(Config.BOL_CONF_PATH + logFileName, 1048476, 1, true);
 			logger.addHandler(fHandler);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fHandler.setFormatter(formatter);
@@ -38,7 +38,7 @@ public class ServerLogger {
 			logger.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
-		logger.info("Server Log Location: " + BOL_CONF_PATH);
+		logger.info("Server Log Location: " + Config.BOL_CONF_PATH);
 	}
 	
 	public Logger getLogger() {
