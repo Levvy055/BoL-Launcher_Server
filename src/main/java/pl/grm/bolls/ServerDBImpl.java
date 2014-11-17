@@ -33,8 +33,8 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 	public void prepareConnection(String login, String pass) {
 		this.dbLogin = login;
 		this.dbPasswd = pass;
-		URL = "jdbc:mysql://" + IP + ":" + PORT + "/BattleOfLegends?user=" + dbLogin + "&password="
-				+ dbPasswd;
+		URL = "jdbc:mysql://" + IP + ":" + PORT + "/BattleOfLegends?user=" + dbLogin
+				+ "&password=" + dbPasswd;
 	}
 	
 	@Override
@@ -160,5 +160,34 @@ public class ServerDBImpl extends UnicastRemoteObject implements LauncherDB {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public Result getPlayerPermissionLevel(String login) throws RemoteException {
+		logger.info("Client connected /n getPlayerPermLvl");
+		ResultSet rs = null;
+		Result result = new Result(1);
+		try {
+			String query = "SELECT perm_level from bol_users WHERE login='" + login
+					+ "';";
+			logger.info("Query execute: " + query);
+			rs = executeQuery(query);
+			if (rs.next()) {
+				int tempI = rs.getInt("perm_level");
+				result.setResultBoolean(true);
+				result.setResultInt(tempI);
+				logger.info("Result gathered: Int: " + tempI);
+			} else {
+				result.setResultBoolean(false);
+			}
+		}
+		catch (SQLException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+			result.setException(e);
+		}
+		finally {
+			closeConn(rs);
+		}
+		return result;
 	}
 }
