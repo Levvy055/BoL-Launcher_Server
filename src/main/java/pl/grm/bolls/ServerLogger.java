@@ -19,13 +19,13 @@ public class ServerLogger {
 	}
 	
 	private void setupLogger() {
-		File dir = new File(Config.BOL_CONF_PATH);
+		File dir = new File(Config.BOL_MAIN_PATH);
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
 		logger = Logger.getLogger(ServerLogger.class.getName());
 		try {
-			fHandler = new FileHandler(Config.BOL_CONF_PATH + logFileName, 1048476, 1, true);
+			fHandler = new FileHandler(Config.BOL_MAIN_PATH + logFileName, 1048476, 1, true);
 			logger.addHandler(fHandler);
 			SimpleFormatter formatter = new SimpleFormatter();
 			fHandler.setFormatter(formatter);
@@ -38,7 +38,7 @@ public class ServerLogger {
 			logger.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
-		logger.info("Server Log Location: " + Config.BOL_CONF_PATH);
+		logger.info("Server Log Location: " + Config.BOL_MAIN_PATH);
 	}
 	
 	public Logger getLogger() {
