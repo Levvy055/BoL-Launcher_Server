@@ -1,4 +1,4 @@
-package pl.grm.bolls;
+package pl.grm.bol.launcher.server;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
