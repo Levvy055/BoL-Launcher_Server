@@ -1,9 +1,6 @@
 package pl.grm.bol.launcher.server;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.rmi.AlreadyBoundException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
@@ -30,18 +27,7 @@ public class Server {
 			dbHandler.prepareConnection(login, pass);
 			registry.bind("dBConfBindHandler", dbHandler);
 		}
-		catch (NullPointerException e) {
-			logger.log(Level.SEVERE, e.toString(), e);
-		}
-		catch (RemoteException e) {
-			logger.log(Level.SEVERE, e.toString(), e);
-			e.printStackTrace();
-		}
-		catch (AlreadyBoundException e) {
-			logger.log(Level.SEVERE, e.toString(), e);
-			e.printStackTrace();
-		}
-		catch (UnknownHostException e) {
+		catch (Exception e) {
 			logger.log(Level.SEVERE, e.toString(), e);
 			e.printStackTrace();
 		}
