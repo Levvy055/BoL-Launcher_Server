@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     compile group: 'org.ini4j', name: 'ini4j', version: 'latest.release'
-    compile files('libs/BoL-Launcher_Lib-0.0.1.jar')
+    compile files('libs/BoL-Launcher_Lib-0.0.2.jar')
   	compile 'mysql:mysql-connector-java:5.1.6'
 	testCompile 'junit:junit:4.11'
 }
